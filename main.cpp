@@ -50,25 +50,50 @@ int main()
     cout << "Третя задача..." << endl;
     cout << "Завдання 27. Вираз" << endl;
    
-    // Введення x
+// Введення x
     double x;
     cout << "Введіть значення x: ";
     cin >> x;
-    
-    
+
     // Константи
     const double LOG5_DENOM = log(5.0);
     const double EPS = 1e-12;
 
     // Аргументи логарифмів
     double arg1 = fabs(x - 2.5);     
-    double arg2 = fabs(x * x - 2.5); 
-    
-    // Чисельник
-    double Top= tan(fabs(3*pow(x,3) + 6*x - 31.15)) + LOG5_DENOM*(fabs(x-2.5));
-    // знаменник
-    double bot= pow(sin(pow(x,2)+ 1/4*LOG5_DENOM*(fabs(pow(x,2)-2.5))),2);
-    // Розрахунок у
-    double y = Top/bot;
-    cout << "Введіть значення y: " << y << endl;
+    double arg2 = fabs(x * x - 2.5);  
+
+    if (arg1 <= 0.0) {
+        cout << "Помилка: log5(|x - 2.5|) не визначений." << endl;
+        return 0;
+    }
+    if (arg2 <= 0.0) {
+        cout << "Помилка: log5(|x^2 - 2.5|) не визначений." << endl;
+        return 0;
+    }
+
+    // Логарифми
+    double log5_arg1 = log(arg1) / LOG5_DENOM;
+    double log5_arg2 = log(arg2) / LOG5_DENOM;
+
+    // Чисельник без fabs
+    double poly = 3.0 * x * x * x + 6.0 * x - 31.15;
+    double tan_arg = poly + log5_arg1;
+    double numerator = tan(tan_arg);
+
+    // Знаменник без fabs
+    double sin_arg = x * x + 0.25 * log5_arg2;
+    double sin_val = sin(sin_arg);
+    double denominator = cbrt(sin_val);
+
+    if (fabs(denominator) <= EPS) {
+        cout << "Помилка: знаменник занадто малий." << endl;
+        return 0;
+    }
+
+    // Остаточний результат
+    double y = numerator / denominator;
+
+    cout << "Результат: y = " << y << endl;
+     return 0;
 }
